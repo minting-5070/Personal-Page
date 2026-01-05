@@ -27,6 +27,8 @@ body {
   color: var(--text);
   background: radial-gradient(circle at top left, #e0edff 0, #f9fbff 55%, #ffffff 100%);
   min-height: 100vh;
+  /* 전체 글씨 크기: 이전(기본)과 현재 사이 정도 */
+  font-size: 16.5px;
 }
 
 .container {
@@ -80,7 +82,7 @@ body {
 .nav {
   display: flex;
   gap: 18px;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
 }
 
 .nav a {
@@ -102,12 +104,19 @@ body {
   position: relative;
   padding: 90px 0 100px;
   color: #f9fafb;
+  /* 기본 파란 계열 그라디언트 배경 */
   background-image: linear-gradient(120deg, #2563eb 0%, #1d4ed8 35%, #0f172a 100%);
   overflow: hidden;
 }
 
+/* Hero 다음 섹션(About)과의 간격을 늘려서 사진이 다닥다닥 붙는 느낌을 줄임 */
+.hero + #about.section {
+  padding-top: 58px;
+}
+
 .hero-overlay {
   position: relative;
+  z-index: 1;
 }
 
 .hero-inner {
@@ -123,24 +132,37 @@ body {
 
 .hero-photo-bg {
   position: absolute;
-  left: 0;
-  bottom: -80px;
-  width: 320px;
-  max-width: 32%;
-  border-radius: 0 30px 0 0;
+  /* 데스크톱: 폭이 달라져도 안정적으로 보이도록 '세로 기준'으로 크기/위치 고정 */
+  left: clamp(48px, 7vw, 180px);
+  top: 50%;
+  transform: translateY(-50%);
+  height: clamp(260px, 56vh, 430px);
+  width: auto;
+  max-width: 36%;
+  border-radius: 26px;
   object-fit: cover;
-  object-position: 50% 15%;
+  /* 하반신이 조금 더 나오도록 프레이밍을 아래로 이동 */
+  object-position: 50% 42%;
   box-shadow: 0 20px 40px rgba(15, 23, 42, 0.5);
 }
 
 .hero-bird {
+  /* 배경 이미지로 처리했기 때문에 별도 이미지 요소는 숨김 */
+  display: none;
+}
+
+/* Yonsei bird를 자연스러운 워터마크처럼 깔기 위한 레이어 */
+.hero::before {
+  content: "";
   position: absolute;
-  left: 26%;
-  top: 8%;
-  width: 520px;
-  max-width: 60%;
-  opacity: 0.32;
+  inset: -40px 0 0 30%;
+  background-image: url("yonsei-bird.png");
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: 600px auto;
+  opacity: 0.16;
   mix-blend-mode: screen;
+  pointer-events: none;
 }
 
 .hero-text {
@@ -162,16 +184,20 @@ body {
 
 .hero-title {
   margin: 0 0 8px;
-  font-size: 2.4rem;
+  font-size: 2.55rem;
   letter-spacing: 0.02em;
   color: #ffffff;
 }
 
 .hero-subtitle {
-  margin: 0 0 10px;
-  font-size: 0.98rem;
+  margin: 0 0 8px;
+  font-size: 1.02rem;
   color: #e5e7eb;
   line-height: 1.6;
+}
+
+.hero-subtitle-gap {
+  margin-bottom: 8px;
 }
 
 .hero-subtitle-strong {
@@ -298,20 +324,55 @@ body {
 }
 
 .about-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr);
-  gap: 40px;
-  align-items: flex-start;
-}
-
-.about-photo-img {
-  width: 100%;
-  max-width: 320px;
-  margin: 0 auto;
+  display: block;
 }
 
 .about-text h3 {
   margin-top: 0;
+}
+
+.about-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.about-copy {
+  min-width: 0;
+}
+
+.about-copy p + p {
+  margin-top: 8px;
+}
+
+.about-full {
+  /* 마지막 학부 문단은 앞 내용과 한 번 더 끊어지게(엔터 느낌) */
+  margin-top: 18px;
+}
+
+.about-wide {
+  /* To date 문단 블록과 Looking ahead 사이: 엔터 1번 느낌 */
+  margin-top: 18px;
+}
+
+.about-avatar {
+  /* 다른 규칙에 덮어써져도 항상 작은 원형으로 유지 */
+  width: 180px !important;
+  height: 180px !important;
+  max-width: 180px !important;
+  border-radius: 999px;
+  object-fit: cover;
+  object-position: 50% 20%;
+  border: 5px solid rgba(255, 255, 255, 0.92);
+  box-shadow:
+    0 18px 42px rgba(15, 23, 42, 0.14),
+    0 0 0 1px rgba(148, 163, 184, 0.35);
+  margin: 2px 0 0;
+}
+
+/* About 제목은 조금 더 존재감 있게 */
+#about h3 {
+  font-size: 1.48rem;
 }
 
 .section {
@@ -334,7 +395,7 @@ body {
 
 .section h3 {
   margin: 0 0 12px;
-  font-size: 1.1rem;
+  font-size: 1.48rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #111827;
@@ -342,9 +403,16 @@ body {
 
 .section p {
   margin: 0;
-  font-size: 0.98rem;
+  font-size: 1.01rem;
   color: var(--muted);
   line-height: 1.7;
+}
+
+/* About 섹션의 서브 한 줄 (학부 학위/장학 요약) */
+.about-subline {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.9rem;
 }
 
 .pub-list {
@@ -378,6 +446,117 @@ body {
 
 .pub-venue {
   margin-top: 2px;
+}
+
+/* Research 섹션의 논문 목록을 "깔끔한 bibliography" 스타일로 */
+#research .pub-list {
+  margin-top: 14px;
+  gap: 26px;
+}
+
+#research .pub-item {
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  backdrop-filter: none;
+}
+
+#research .pub-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 6px;
+  line-height: 1.35;
+}
+
+#research .pub-authors {
+  font-size: 0.95rem;
+  color: rgba(51, 65, 85, 0.9);
+  line-height: 1.55;
+}
+
+#research .pub-venue {
+  margin-top: 6px;
+  font-size: 0.98rem;
+  color: rgba(51, 65, 85, 0.88);
+  line-height: 1.55;
+}
+
+#research .pub-venue em {
+  font-style: italic;
+  font-weight: 600;
+  color: rgba(15, 23, 42, 0.9);
+}
+
+/* Research: 섹션 구분을 확실히 (Interests/Methodology/Lists) */
+#research .research-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 18px;
+  margin-top: 10px;
+  margin-bottom: 18px;
+}
+
+#research .research-block {
+  padding: 14px 14px 12px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(209, 213, 219, 0.85);
+}
+
+#research .research-subhead {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(15, 23, 42, 0.85);
+  margin: 0 0 8px;
+}
+
+#research .research-subhead-lg {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+/* Research: 섹션 타이틀(예: Academic Papers) */
+#research .research-section-title {
+  margin: 22px 0 12px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(148, 163, 184, 0.35);
+  font-size: 1.25rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0f172a;
+}
+
+/* Paper item 내부 Methodology 라벨 */
+#research .pub-label {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  color: rgba(51, 65, 85, 0.88);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  vertical-align: middle;
+}
+
+#research .pub-venue.pub-method {
+  margin-top: 8px;
+  font-size: 0.93rem;
+  color: rgba(71, 85, 105, 0.94);
+}
+
+@media (max-width: 800px) {
+  #research .research-split {
+    grid-template-columns: 1fr;
+  }
 }
 
 .contact-grid {
@@ -498,6 +677,35 @@ body {
     padding: 70px 0 70px;
   }
 
+  /* 작은 화면에서는 absolute 오버레이가 깨지기 쉬워서,
+     사진을 흐름에 포함시켜 어떤 폭에서도 자연스럽게 보이게 함 */
+  .hero-art {
+    position: static;
+    inset: auto;
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    justify-content: flex-start;
+  }
+
+  .hero-text {
+    max-width: none;
+  }
+
+  .hero-photo-bg {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    top: auto;
+    transform: none;
+    height: auto;
+    width: clamp(220px, 62vw, 360px);
+    max-width: 100%;
+    margin: 0 0 18px;
+    border-radius: 22px;
+  }
+
   .about-layout {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -514,7 +722,7 @@ body {
   }
 
   .hero-title {
-    font-size: 1.8rem;
+    font-size: 1.95rem;
   }
 
   .section {
